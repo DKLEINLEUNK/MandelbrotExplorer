@@ -1,33 +1,37 @@
-# stochastic-simulation
-Assignments for the course Stochastic Simulation, University of Amsterdam (23-24). Solely intended for educational purposes.
+# Stochastic Simulation
 
-# Overview
+Assignments for the course Stochastic Simulation, University of Amsterdam (23-24).
 
-Skeleton overviews of all 
+Solely intended for educational purposes.
 
-## Assignment 1
+<br/>
+
+# Assignment 1
+
+See notebook `Overview.ipynb` for an overview of assignment 1. This notebook uses the package `mandelbrot`.
+
+The `mandelbrot` package adheres to the following module structure,
+
 ```
-Assignment_1/
+
+mandelbrot/
 │
-├── Mandelbrot/
-│   │
-│   ├── Area/
-│   │   ├── __init__.py
-│   │   ├── convergence.py         # Analysis of convergence and comparison of all sampling techniques.
-│   │   ├── latin_hypercube.py     # Latin hypercube sampling.
-│   │   ├── monte_carlo.py         # Monte Carlo sampling (and additional improvements).
-│   │   ├── orthogonal.py          # Orthogonal sampling.
-│   │   └── pure_random.py         # Pure random sampling.
-│   │
+├── sampling/
 │   ├── __init__.py
-│   ├── mandelbrot.py              # Mandelbrot set iterations.
-│   └── plotter.py                 # Plots the Mandelbrot set and area estimations.
+│   ├── convergence.py          # Handles convergence analyses
+│   ├── latin_hypercube.py      # Latin hypercube sampling
+│   ├── monte_carlo.py          # Monte Carlo sampling (+ improvements)
+│   ├── orthogonal.py           # Orthogonal sampling
+│   └── pure_random.py          # Pure random sampling
 │
 ├── Utils/
 │   ├── __init__.py
-│   └── utils.py                   # Generic utility functions for the project.
+│   └── utils.py                # Generic utility functions
 │
-├── instructions.pdf               # Assignment instructions.
-├── main.py                        # Orchastrating all packages.
+├── __init__.py
+├── main.py                     # Orchastrates the computations
+├── mandelbrot.py               # Handles Mandelbrot set
+├── plotter.py                  # Handles plotting
 └── requirements.txt               # Project dependencies.
+
 ```
