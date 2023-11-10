@@ -24,7 +24,7 @@ mandelbrot/
 │   ├── orthogonal.py           # Orthogonal sampling
 │   └── pure_random.py          # Pure random sampling
 │
-├── Utils/
+├── utils/
 │   ├── __init__.py
 │   └── utils.py                # Generic utility functions
 │
@@ -32,6 +32,6 @@ mandelbrot/
 ├── main.py                     # Orchastrates the computations
 ├── mandelbrot.py               # Handles Mandelbrot set
 ├── plotter.py                  # Handles plotting
-└── requirements.txt               # Project dependencies.
+└── requirements.txt            # Project dependencies
 
 ```
