@@ -1,1 +1,2 @@
-from .mandelbrot import Mandelbrot
+from .Mandelbrot import Mandelbrot
+from .sampling import sampler

@@ -1,8 +1,6 @@
 import numpy as np
 
-from ..utils import in_mandelbrot
-
-def sampler(grid: np.ndarray, n_samples=1000, max_iter=256, verbose=False):
+def grid(grid: np.ndarray, n_samples=1000, max_iter=256, verbose=False):
     '''Performs Monte Carlo sampling on a grid of complex numbers.
 
     :param grid: grid of complex numbers
@@ -22,7 +20,7 @@ def sampler(grid: np.ndarray, n_samples=1000, max_iter=256, verbose=False):
     # Iterate each point in the sample, determine whether it lies within the Mandelbrot set
     is_in_mandelbrot = np.zeros(n_samples, dtype=bool)
     for i in range(len(sample)):
-        is_in_mandelbrot[i] = in_mandelbrot(sample[i], MAX_ITER=max_iter)
+        is_in_mandelbrot[i] = sampling.in_mandelbrot(sample[i], MAX_ITER=max_iter)
 
     if verbose:
         print(f'Grid size: {grid.size}')
@@ -33,3 +31,15 @@ def sampler(grid: np.ndarray, n_samples=1000, max_iter=256, verbose=False):
         print(f'\nNumber of points in the sample that lie within the Mandelbrot set: {np.sum(is_in_mandelbrot)}')
 
     return sample, is_in_mandelbrot
+
+
+def pure_random_sampling():
+    pass
+
+
+def latin_hypercube_sampling():
+    pass
+
+
+def orthogonal_array_sampling():
+    pass

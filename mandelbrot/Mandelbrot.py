@@ -2,10 +2,11 @@ import numpy as np
 
 from .plotter import plot_mandelbrot_set
 
+
 class Mandelbrot:
     '''Class for generating the Mandelbrot set.'''
 
-    def __init__(self, width=1000, height=1000, x_min=-1.7, x_max=0.7, y_min=-1.2, y_max=1.2):
+    def __init__(self, width=1000, height=1000, x_min=-1.7, x_max=0.7, y_min=-1.2, y_max=1.2, set=False):
         '''Generates a grid of complex numbers in the complex plane.
 
         :param width: number of points in the real part
@@ -46,6 +47,9 @@ class Mandelbrot:
 
         self.is_set = False
 
+        if set:
+            self.set()
+
 
     def generate_grid(self):
         '''Generates a grid of complex numbers in the complex plane.'''
@@ -85,10 +89,3 @@ class Mandelbrot:
 
         if plot:
             plot_mandelbrot_set(self)
-
-
-if __name__ == '__main__':
-    
-    mandel = Mandelbrot()
-    mandel.set(plot=True)    
-    
