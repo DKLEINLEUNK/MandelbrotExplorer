@@ -1,8 +1,9 @@
 import numpy as np
 
+from ..plotter import plot_mandbrot_sample
 from ..utils import in_mandelbrot
 
-def sampler(grid: np.ndarray, n_samples=1000, max_iter=256, verbose=False):
+def sampler(grid: np.ndarray, n_samples=1000, max_iter=256, plot=False, verbose=False):
     '''Performs Monte Carlo sampling on a grid of complex numbers.
 
     :param grid: grid of complex numbers
@@ -31,5 +32,8 @@ def sampler(grid: np.ndarray, n_samples=1000, max_iter=256, verbose=False):
         print(f'Indices: {indices}')
         print(f'Sample size: {sample.size}')
         print(f'\nNumber of points in the sample that lie within the Mandelbrot set: {np.sum(is_in_mandelbrot)}')
+
+    if plot:
+        plot_mandbrot_sample(sample, is_in_mandelbrot)
 
     return sample, is_in_mandelbrot
