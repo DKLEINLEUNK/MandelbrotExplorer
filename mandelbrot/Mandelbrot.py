@@ -1,6 +1,6 @@
 import numpy as np
 
-from plotter import plot_mandelbrot_set
+from .plotter import plot_mandelbrot_set
 
 
 class Mandelbrot:
@@ -89,22 +89,3 @@ class Mandelbrot:
 
         if plot:
             plot_mandelbrot_set(self)
-
-
-if __name__ == '__main__':
-    from sampling import sampler
-
-    mandelbrot = Mandelbrot(set=False)
-    grid = mandelbrot.grid
-    
-    # Find the number of points in the Mandelbrot set using Monte Carlo sampling
-    n_samples = 10_000
-    points_in_mandelbrot = sampler.monte_carlo_sampling(grid, n_samples, max_iter=256)
-    
-    # area_estimate = points_in_mandelbrot / n_samples
-    area_estimate = points_in_mandelbrot / n_samples * (mandelbrot.x_max - mandelbrot.x_min) * (mandelbrot.y_max - mandelbrot.y_min)
-
-    print(f'Area estimate: {area_estimate}')
-
-
-    # plot_mandelbrot_set(mandelbrot_set)

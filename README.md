@@ -8,7 +8,7 @@ Solely intended for educational purposes.
 
 # Assignment 1
 
-See notebook `Overview.ipynb` for our submission of assignment 1. This notebook uses the modules in `mandelbrot/`.
+See notebook `Notebook.ipynb` for our submission of assignment 1. This notebook uses the modules in `mandelbrot/`.
 
 The `mandelbrot` package adheres to the following structure,
 
