@@ -34,6 +34,6 @@ def sampler(grid: np.ndarray, n_samples=1000, max_iter=256, plot=False, verbose=
         print(f'\nNumber of points in the sample that lie within the Mandelbrot set: {np.sum(is_in_mandelbrot)}')
 
     if plot:
-        plot_mandbrot_sample(sample, is_in_mandelbrot)
+        plot_mandbrot_sample(sample, is_in_mandelbrot, plot_color='b')
 
     return sample, is_in_mandelbrot

@@ -16,12 +16,13 @@ def plot_mandelbrot_set(mandelbrot_set):
     plt.show()
 
 
-def plot_mandbrot_sample(points: ndarray, point_in_mandelbrot):
+def plot_mandbrot_sample(points: ndarray, point_in_mandelbrot, plot_color):
     '''Plots a sample of complex numbers and indicates which points lie within the Mandelbrot set.
     
     :param points: an array of points
     :param point_in_mandelbrot: a boolean array indicating whether each point lies within the Mandelbrot set
+    :param plot_color: the color of the points that lie within the Mandelbrot set
     '''
     plt.figure(figsize=(5, 5), dpi=900)
-    plt.plot(points.real[point_in_mandelbrot], points.imag[point_in_mandelbrot], 'b.', markersize=0.1)
+    plt.plot(points.real[point_in_mandelbrot], points.imag[point_in_mandelbrot], '.', color=plot_color, markersize=0.3)
     plt.show()
