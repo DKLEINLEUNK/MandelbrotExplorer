@@ -22,5 +22,6 @@ def plot_mandbrot_sample(points: ndarray, point_in_mandelbrot):
     :param points: an array of points
     :param point_in_mandelbrot: a boolean array indicating whether each point lies within the Mandelbrot set
     '''
-    plt.plot(points.real[point_in_mandelbrot], points.imag[point_in_mandelbrot], 'b.')
-    plt.show()    
+    plt.figure(figsize=(5, 5), dpi=900)
+    plt.plot(points.real[point_in_mandelbrot], points.imag[point_in_mandelbrot], 'b.', markersize=0.1)
+    plt.show()
