@@ -2,6 +2,8 @@ import os
 import logging
 import time
 
+import numpy as np
+
 ### PROJECT UTILITIES ###
 # Check if a complex number is in the Mandelbrot set
 def in_mandelbrot(c, MAX_ITER=256):
@@ -21,6 +23,27 @@ def in_mandelbrot(c, MAX_ITER=256):
     else:
         return True
 
+# Optimized version of the above function using NumPy
+def in_mandelbrot_vectorized(samples: np.ndarray, MAX_ITER=256):
+    '''Determines whether a complex number is in the Mandelbrot set, but then this time with sick performance gainz ;)
+    
+    :param samples: complex numbers
+    '''
+    z = np.zeros_like(samples)
+    to_do = np.ones(samples.shape, dtype=bool)  # array of all samples still being processed
+    in_mandelbrot = np.full(samples.shape, True, dtype=bool)
+    
+    # Use numpy's array broadcasting to update all samples at once (instead of looping over each sample) 
+    for i in range(MAX_ITER):
+        
+        # First, update samples still being processed
+        z[to_do] = z[to_do]**2 + samples[to_do]
+
+        # Second, update to_do array given the updated |z| values
+        to_do &= (np.abs(z) <= 2)
+        in_mandelbrot &= to_do
+
+    return in_mandelbrot
 
 
 ### GENERIC LIBRARY UTILITIES ###
