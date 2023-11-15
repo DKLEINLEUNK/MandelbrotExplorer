@@ -10,10 +10,20 @@ Solely intended for educational purposes.
 
 See notebook `Notebook.ipynb` for our submission of assignment 1. This notebook uses the modules in `mandelbrot/`.
 
-The `mandelbrot` package adheres to the following structure,
+## TODO
+
+### Large tasks
+- [ ] Implement orthogonal sampling.
+- [ ] Define a statistics generator for estimating integration accuracy.
+
+### Small tasks
+- [ ] Remove `monte_carlo.py` module (and its traces in other modules).
+
+
+## Project Outline
+The `mandelbrot` package adheres to the following structure:
 
 ```
-
 mandelbrot/
 │
 ├── sampling/
@@ -33,5 +43,4 @@ mandelbrot/
 ├── mandelbrot.py               # Handles Mandelbrot set
 ├── plotter.py                  # Handles plotting
 └── requirements.txt            # Project dependencies
-
 ```
