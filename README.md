@@ -15,8 +15,14 @@ See notebook `Notebook.ipynb` for our submission of assignment 1. This notebook 
 ### Large tasks
 - [ ] Implement orthogonal sampling.
 - [ ] Define a statistics generator for estimating integration accuracy.
+- [ ] Compare how different quasi-random number algortithms perform.
+- [ ] Test wether each sampling method adhered to all assumptions.
+- [ ] Update all sampling algorithms with the optimized algorithm in `orthogonal.py`.
 
-### Small tasks
+### Small tasks (additions and removals)
+- [ ] In `orthogonal.py` replace `interval_length` with `n_samples` and infer interval length from that.
+- [ ] Add a method to Mandelbrot class that calculates the area of the set.
+- [ ] Add a calculation of the area: multiply points in set by total sample space.
 - [ ] Remove `monte_carlo.py` module (and its traces in other modules).
 
 
