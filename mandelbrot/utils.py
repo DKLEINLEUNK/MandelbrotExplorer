@@ -4,7 +4,14 @@ import time
 
 import numpy as np
 
-### PROJECT UTILITIES ###
+from .Mandelbrot import Mandelbrot
+
+
+
+#---------------------------
+# PROJECT UTILITIES
+#---------------------------
+
 # Check if a complex number is in the Mandelbrot set
 def in_mandelbrot(c, MAX_ITER=256):
     '''Determines whether a complex number is in the Mandelbrot set.
@@ -19,9 +26,10 @@ def in_mandelbrot(c, MAX_ITER=256):
         n_iter += 1         # increment the number of iterations
 
     if n_iter == MAX_ITER:
-        return False  # as c did not result in a bounded sequence
-    else:
         return True
+    else:
+        return False  # as c did not result in a bounded sequence
+
 
 # Optimized version of the above function using NumPy
 def in_mandelbrot_vectorized(samples: np.ndarray, MAX_ITER=256):
@@ -46,7 +54,33 @@ def in_mandelbrot_vectorized(samples: np.ndarray, MAX_ITER=256):
     return in_mandelbrot
 
 
-### GENERIC LIBRARY UTILITIES ###
+def estimate_mandelbrot_area(sample: np.ndarray, in_mandelbrot: np.ndarray, mandelbrot: Mandelbrot, verbose=True):
+    '''Estimates the area of the Mandelbrot set within a given range.
+    
+    :param samples: sample of complex numbers
+    :param in_mandelbrot: boolean array indicating whether each sample is in the Mandelbrot set
+    :param mandelbrot: Mandelbrot set
+
+    :return: estimated area of the Mandelbrot set
+    '''
+    proportion_in_set = np.sum(in_mandelbrot) / sample.size
+    
+    area_grid = (mandelbrot.x_max - mandelbrot.x_min) * (mandelbrot.y_max - mandelbrot.y_min)
+
+    # Estimate the area of the Mandelbrot set
+    area = proportion_in_set * area_grid
+
+    if verbose:
+        print(f'A = {area} for {sample.size} samples & 256 iterations')
+
+    return area
+
+
+
+#---------------------------
+# GENERIC LIBRARY UTILITIES
+#---------------------------
+
 # File and Directory Management: Functions to create directories for saving plots, check if a file already exists, or handle file paths.
 def ensure_directory_exists(path):
     """Ensure that a directory exists, and if not, create it."""

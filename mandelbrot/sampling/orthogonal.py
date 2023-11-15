@@ -52,3 +52,5 @@ def sampler(mandelbrot: Mandelbrot, interval_length=1000, max_iter=256, plot=Fal
 
     if plot:
         plot_mandbrot_sample(sample, is_in_mandelbrot, plot_color='#9370DB')
+
+    return sample, is_in_mandelbrot
