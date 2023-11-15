@@ -32,7 +32,7 @@ def sampler(mandelbrot: Mandelbrot, n_samples=1000, max_iter=256, plot=False, ve
     if verbose:
         print(f'Permutations: {strata}, with length {strata.size}')
 
-    # 3. Sample one point from each strata (randomly between the strata's bounds)
+    # 3. Sample one point from each permutation (randomly between the strata's bounds)
     sample = np.array([])
     for stratum in strata:
         x_bounds = stratum[0]
