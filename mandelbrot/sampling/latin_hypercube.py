@@ -2,10 +2,61 @@ import numpy as np
 
 from ..Mandelbrot import Mandelbrot
 from ..plotter import plot_mandbrot_sample
-from ..utils import in_mandelbrot
+from ..utils import in_mandelbrot, in_mandelbrot_vectorized
 
 
 def sampler(mandelbrot: Mandelbrot, n_samples=1000, max_iter=256, plot=False, verbose=False):
+    '''Performs Latin hypercube sampling on a grid of complex numbers.
+    
+    Now with optimization.
+    '''
+    n_samples += 1  # Add 1 to account for the first sample
+    
+    # 1. Initialize the intervals:
+    x_interval = np.linspace(mandelbrot.x_min, mandelbrot.x_max, num=n_samples)
+    y_interval = np.linspace(mandelbrot.y_min, mandelbrot.y_max, num=n_samples)
+    
+    # 2. Calculate stratum width and height:
+    x_width = (mandelbrot.x_max - mandelbrot.x_min) / n_samples
+    y_height = (mandelbrot.y_max - mandelbrot.y_min) / n_samples
+
+    # 3. Initialize vertical and horizontal grid with all lower bounds of each stratum:
+    x_lower_bounds = x_interval[:-1]
+    y_lower_bounds = y_interval[:-1]
+
+    if verbose:
+        print(f'x_interval: {x_interval}')
+        print(f'y_interval: {y_interval}')
+        print(f'x_width: {x_width}')
+        print(f'y_height: {y_height}')
+        print(f'x_lower_bounds: {x_lower_bounds}')
+        print(f'y_lower_bounds: {y_lower_bounds}')
+        print(f'x_lower_bounds.shape: {x_lower_bounds.shape}')
+        print(f'y_lower_bounds.shape: {y_lower_bounds.shape}')
+
+    # 4. Randomly shuffle rows for stratum pairs
+    np.random.shuffle(y_lower_bounds)
+
+    # 5. Form random offsets for each stratum:
+    x_offsets = np.random.uniform(0, x_width, size=x_lower_bounds.shape)
+    y_offsets = np.random.uniform(0, y_height, size=y_lower_bounds.shape)
+
+    # 6. Combine the lower bounds with the offsets to get the sample points:
+    sample = (x_lower_bounds + x_offsets) + 1j * (y_lower_bounds + y_offsets)
+
+    if verbose:
+        print(f'sample: {sample}')
+
+    # 7. Check whether the sampled points are in the set or not:
+    is_in_mandelbrot = in_mandelbrot_vectorized(sample, MAX_ITER=max_iter)
+
+    if plot:
+        plot_mandbrot_sample(sample, is_in_mandelbrot, plot_color='#9370DB')
+
+    return sample, is_in_mandelbrot
+
+
+def old_sampler(mandelbrot: Mandelbrot, n_samples=1000, max_iter=256, plot=False, verbose=False):
     '''Performs Latin hypercube sampling on a grid of complex numbers.'''
     # Goal: Sample one sample from each unique row and column of a grid
     n_samples = n_samples + 1  # Add 1 to account for the first sample

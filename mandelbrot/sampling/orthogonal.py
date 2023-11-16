@@ -6,7 +6,7 @@ from ..Mandelbrot import Mandelbrot
 from ..plotter import plot_mandbrot_sample
 from ..utils import in_mandelbrot_vectorized
 
-def sampler(mandelbrot: Mandelbrot, interval_length=1000, max_iter=256, plot=False, verbose=False):
+def sampler(mandelbrot: Mandelbrot, n_sample=1000, max_iter=256, plot=False, verbose=False):
     # TODO: replace `interval_length` with `n_samples` and infer the interval length from that
     
     # ------------------------------------------------------------------
@@ -14,7 +14,8 @@ def sampler(mandelbrot: Mandelbrot, interval_length=1000, max_iter=256, plot=Fal
     # sampled points with boolean values indicating whether the point is 
     # in the set or not.
     # ------------------------------------------------------------------
-    
+    interval_length = round((np.sqrt(n_sample)) + 1)
+
     # 1. Initialize the intervals:
     x_interval = np.linspace(mandelbrot.x_min, mandelbrot.x_max, num=interval_length)
     y_interval = np.linspace(mandelbrot.y_min, mandelbrot.y_max, num=interval_length)
