@@ -10,17 +10,11 @@ class Mandelbrot:
         '''Generates a grid of complex numbers in the complex plane.
 
         :param width: number of points in the real part
-
         :param height: number of points in the imaginary part
-        
         :param x_min: minimum value of the real part
-
         :param x_max: maximum value of the real part
-
         :param y_min: minimum value of the imaginary part
-
         :param y_max: maximum value of the imaginary part
-
         :param sparse: if True, returns sparse coordinate arrays
 
         :return: a grid of complex numbers

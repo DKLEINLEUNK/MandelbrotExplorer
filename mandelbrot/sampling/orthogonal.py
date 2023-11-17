@@ -6,7 +6,7 @@ from ..Mandelbrot import Mandelbrot
 from ..plotter import plot_mandbrot_sample
 from ..utils import in_mandelbrot_vectorized
 
-def sampler(mandelbrot: Mandelbrot, n_sample=1000, max_iter=256, plot=False, verbose=False):
+def sampler(mandelbrot: Mandelbrot, n_sample=1000, max_iter=256, plot=False, verbose=False, return_lowerbounds=False):
     # TODO: replace `interval_length` with `n_samples` and infer the interval length from that
     
     # ------------------------------------------------------------------
@@ -14,7 +14,7 @@ def sampler(mandelbrot: Mandelbrot, n_sample=1000, max_iter=256, plot=False, ver
     # sampled points with boolean values indicating whether the point is 
     # in the set or not.
     # ------------------------------------------------------------------
-    interval_length = round((np.sqrt(n_sample)) + 1)
+    interval_length = round((np.sqrt(n_sample) + 1))
 
     # 1. Initialize the intervals:
     x_interval = np.linspace(mandelbrot.x_min, mandelbrot.x_max, num=interval_length)
@@ -25,8 +25,8 @@ def sampler(mandelbrot: Mandelbrot, n_sample=1000, max_iter=256, plot=False, ver
     y_height = (mandelbrot.y_max - mandelbrot.y_min) / interval_length
 
     # 3. Initialize vertical and horizontal grid with all lower bounds of each stratum:
-    x_lower_bounds = np.repeat(x_interval[:-1], interval_length)
-    y_lower_bounds = np.tile(y_interval[:-1], interval_length)
+    x_lower_bounds = np.repeat(x_interval[:-1], (interval_length-1))  # note, interval_length-1 because we don't want to include the upper bound to avoid duplicates
+    y_lower_bounds = np.tile(y_interval[:-1], (interval_length-1))
     
     # 4. Form random offsets for each stratum:
     x_offsets = np.random.uniform(0, x_width, size=x_lower_bounds.shape)
@@ -53,5 +53,8 @@ def sampler(mandelbrot: Mandelbrot, n_sample=1000, max_iter=256, plot=False, ver
 
     if plot:
         plot_mandbrot_sample(sample, is_in_mandelbrot, plot_color='#9370DB')
+
+    if return_lowerbounds:
+        return x_lower_bounds, y_lower_bounds, sample, is_in_mandelbrot
 
     return sample, is_in_mandelbrot

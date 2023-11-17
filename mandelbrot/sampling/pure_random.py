@@ -4,10 +4,19 @@ from ..Mandelbrot import Mandelbrot
 from ..plotter import plot_mandbrot_sample
 from ..utils import in_mandelbrot_vectorized
 
+
 def sampler(mandelbrot: Mandelbrot, n_samples=1000, max_iter=256, plot=False, verbose=False):
     '''Performs Monte Carlo sampling on a grid of complex numbers.
     
     Now with optimization.
+
+    :param mandelbrot: Mandelbrot set
+    :param n_samples: number of samples to take
+    :param max_iter: maximum number of iterations to perform
+    :param plot: whether to plot the sample
+    :param verbose: whether to print out information about the sampling process
+
+    :return: a sample of complex numbers and a boolean array indicating whether each point in the sample lies within the Mandelbrot set
     '''
     # 1. Randomly select points on the x and y axes:
     x_samples = np.random.uniform(mandelbrot.x_min, mandelbrot.x_max, size=n_samples)

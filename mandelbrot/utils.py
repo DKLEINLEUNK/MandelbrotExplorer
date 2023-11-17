@@ -3,8 +3,7 @@ import logging
 import time
 
 import numpy as np
-
-from .Mandelbrot import Mandelbrot
+import pandas as pd
 
 
 
@@ -31,7 +30,6 @@ def in_mandelbrot(c, MAX_ITER=256):
         return False  # as c did not result in a bounded sequence
 
 
-# Optimized version of the above function using NumPy
 def in_mandelbrot_vectorized(samples: np.ndarray, MAX_ITER=256):
     '''Determines whether a complex number is in the Mandelbrot set, but then this time with sick performance gainz ;)
     
@@ -41,20 +39,20 @@ def in_mandelbrot_vectorized(samples: np.ndarray, MAX_ITER=256):
     to_do = np.ones(samples.shape, dtype=bool)  # array of all samples still being processed
     in_mandelbrot = np.full(samples.shape, True, dtype=bool)
     
-    # Use numpy's array broadcasting to update all samples at once (instead of looping over each sample) 
+    # 1. Use numpy's array broadcasting to update all samples at once (instead of looping over each sample) 
     for i in range(MAX_ITER):
         
-        # First, update samples still being processed
+        # 1.1 Update samples still being processed
         z[to_do] = z[to_do]**2 + samples[to_do]
 
-        # Second, update to_do array given the updated |z| values
+        # 1.2 Update to_do array given the updated |z| values
         to_do &= (np.abs(z) <= 2)
         in_mandelbrot &= to_do
 
     return in_mandelbrot
 
 
-def estimate_mandelbrot_area(sample: np.ndarray, in_mandelbrot: np.ndarray, mandelbrot: Mandelbrot, verbose=True):
+def estimate_mandelbrot_area(sample: np.ndarray, in_mandelbrot: np.ndarray, mandelbrot, verbose=False):
     '''Estimates the area of the Mandelbrot set within a given range.
     
     :param samples: sample of complex numbers
@@ -74,6 +72,66 @@ def estimate_mandelbrot_area(sample: np.ndarray, in_mandelbrot: np.ndarray, mand
         print(f'A = {area} for {sample.size} samples & 256 iterations')
 
     return area
+
+
+def estimate_mean_area(repeats: int, sampler_function, mandelbrot, n_samples=10_000, n_iters=256, verbose = False):
+    '''Estimates the mean of a sample of complex numbers.
+    
+    :param repeats: number of times to repeat the sampling process
+    :param sampler: function to perform the sampling
+    :param mandelbrot: Mandelbrot set
+    :param verbose: whether to print out information about the sampling process
+
+    :return: estimated mean area of the Mandelbrot set
+    '''
+    if verbose:
+        print(f'Estimating mean area for {repeats} repeats...')
+
+    # 1. Estimate the mean area of the Mandelbrot set for `repeats` samples:
+    areas = np.zeros(repeats)
+    for i in np.arange(repeats):
+
+        # 1.1 Use the sampler function:
+        sample, is_in_mandelbrot = sampler_function(mandelbrot, n_samples, n_iters)
+
+        # 1.2 Estimate the area of the Mandelbrot set:
+        area = estimate_mandelbrot_area(sample, is_in_mandelbrot, mandelbrot)
+        areas[i] = area
+
+        if verbose:
+            print(f'Area {i}: {area}')
+
+    # 2. Calculate the mean area (& standard deviation and error):
+    mean_area = np.mean(areas)
+    mean_area_std = np.std(areas)
+    mean_area_err = mean_area_std / np.sqrt(repeats)
+
+    return mean_area, mean_area_std, mean_area_err
+
+
+def estimate_A_j_s(mandelbrot, sampler, abbr='tmp', J=np.arange(1, 257, 2), S=np.array([100, 1_000, 10_000, 100_000, 1_000_000])):
+    n_iters = J
+    n_samples = S
+    
+    for s in S:
+
+        print(f'Running estimations for s = {s}...')
+        
+        areas = np.zeros(len(n_iters))
+
+        for i in n_iters:
+
+            sample, is_in_mandelbrot = sampler(mandelbrot, s, i)
+            area = estimate_mandelbrot_area(sample, is_in_mandelbrot, mandelbrot)
+            areas[i//2] = area
+
+        print('Done!')
+        
+        pd.DataFrame({
+            'n_iters': n_iters,
+            'area': areas
+        }).to_csv(f'data/{abbr}_A_s_{s}.csv', index=False)
+
 
 
 

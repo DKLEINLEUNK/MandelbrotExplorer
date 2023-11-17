@@ -34,7 +34,8 @@ def sampler(mandelbrot: Mandelbrot, n_samples=1000, max_iter=256, plot=False, ve
         print(f'x_lower_bounds.shape: {x_lower_bounds.shape}')
         print(f'y_lower_bounds.shape: {y_lower_bounds.shape}')
 
-    # 4. Randomly shuffle rows for stratum pairs
+    # 4. Randomly shuffle rows & columns
+    np.random.shuffle(x_lower_bounds)
     np.random.shuffle(y_lower_bounds)
 
     # 5. Form random offsets for each stratum:
