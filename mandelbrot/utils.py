@@ -5,6 +5,8 @@ import time
 import numpy as np
 import pandas as pd
 
+from .Mandelbrot import Mandelbrot
+
 
 
 #---------------------------
@@ -50,6 +52,25 @@ def in_mandelbrot_vectorized(samples: np.ndarray, MAX_ITER=256):
         in_mandelbrot &= to_do
 
     return in_mandelbrot
+
+
+def in_mandelbrot_vectorized_count(Mandelbrot: Mandelbrot, max_iter):
+    C = Mandelbrot.xy_grid
+    z = np.zeros_like(C)
+    to_do = np.ones(C.shape, dtype=bool)  # array of all samples still being processed
+    count = np.zeros(C.shape, dtype=int)
+    
+    # 1. Use numpy's array broadcasting to update all samples at once (instead of looping over each sample) 
+    for i in range(max_iter):
+        
+        # 1.1 Update samples (with count) still being processed
+        z[to_do] = z[to_do]**2 + C[to_do]
+        count[to_do] = i
+        
+        # 1.2 Update to_do array given the updated |z| values
+        to_do &= (np.abs(z) <= 2)
+
+    return count
 
 
 def estimate_mandelbrot_area(sample: np.ndarray, in_mandelbrot: np.ndarray, mandelbrot, verbose=False):

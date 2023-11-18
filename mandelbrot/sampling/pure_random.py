@@ -35,7 +35,7 @@ def sampler(mandelbrot: Mandelbrot, n_samples=1000, max_iter=256, plot=False, ve
         print(f'is_in_mandelbrot: {is_in_mandelbrot}')
     
     if plot:
-        plot_mandbrot_sample(sample, is_in_mandelbrot, plot_color='#9370DB')
+        plot_mandbrot_sample(sample, is_in_mandelbrot, plot_color='#5f3cff')
     
     return sample, is_in_mandelbrot
 

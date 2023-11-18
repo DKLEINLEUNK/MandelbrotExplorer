@@ -6,6 +6,7 @@ from ..Mandelbrot import Mandelbrot
 from ..plotter import plot_mandbrot_sample
 from ..utils import in_mandelbrot_vectorized
 
+
 def sampler(mandelbrot: Mandelbrot, n_sample=1000, max_iter=256, plot=False, verbose=False, return_lowerbounds=False):
     # TODO: replace `interval_length` with `n_samples` and infer the interval length from that
     
@@ -52,7 +53,7 @@ def sampler(mandelbrot: Mandelbrot, n_sample=1000, max_iter=256, plot=False, ver
         print(f'\nis_in_mandelbrot: {is_in_mandelbrot}')
 
     if plot:
-        plot_mandbrot_sample(sample, is_in_mandelbrot, plot_color='#9370DB')
+        plot_mandbrot_sample(sample, is_in_mandelbrot, plot_color='#C50974')
 
     if return_lowerbounds:
         return x_lower_bounds, y_lower_bounds, sample, is_in_mandelbrot

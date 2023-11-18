@@ -3,23 +3,25 @@ import numpy as np
 from numpy import ndarray
 import pandas as pd
 
-from .utils import estimate_mean_area
+from .utils import in_mandelbrot_vectorized_count, estimate_mean_area
+from .Mandelbrot import Mandelbrot
 
 
-def plot_mandelbrot_set(mandelbrot_set):
-    '''Plots the Mandelbrot set.
+def illustrate_mandelbrot_set(Mandelbrot: Mandelbrot, max_iter):
+    '''Plots the Mandelbrot set.'''
+    count = in_mandelbrot_vectorized_count(Mandelbrot, max_iter)
     
-    :param mandelbrot_set: the Mandelbrot set to plot
-    '''
-    # check if the set has been generated
-    if not mandelbrot_set.is_set:
-        raise Exception('Mandelbrot set has not been generated, please use `.set()` method.')
+    fig, ax = plt.subplots()
+    sc = ax.scatter(Mandelbrot.x_grid, Mandelbrot.y_grid, c=count.ravel(), cmap='viridis')
     
-    h = plt.contourf(mandelbrot_set.x, mandelbrot_set.y, mandelbrot_set.grid)
-    plt.axis('scaled')
-    plt.colorbar()
+    ax.spines['top'].set_visible(False)
+    ax.spines['right'].set_visible(False)
+
+    plt.colorbar(sc, label='#iterations')  # I use a variable to avoid async issues
+    plt.xlabel(f'$\Re z$')
+    plt.ylabel(f'$\Im z$')
     plt.show()
-
+    
 
 def plot_mandbrot_sample(points: ndarray, point_in_mandelbrot, plot_color):
     '''Plots a sample of complex numbers and indicates which points lie within the Mandelbrot set.
@@ -29,6 +31,14 @@ def plot_mandbrot_sample(points: ndarray, point_in_mandelbrot, plot_color):
     :param plot_color: the color of the points that lie within the Mandelbrot set
     '''
     plt.figure(figsize=(5, 5), dpi=900)
+    
+    plt.xlabel(f'$\Re z$')
+    plt.ylabel(f'$\Im z$')
+
+    plt.ylim([-1.2, 1.2])
+    plt.xlim([-1.7, 0.7])
+    plt.yticks([-1.0, -0.5, 0.0, 0.5, 1.0])
+    plt.xticks([-1.5, -1.0, -0.5, 0.0, 0.5])
     plt.plot(points.real[point_in_mandelbrot], points.imag[point_in_mandelbrot], '.', color=plot_color, markersize=0.3)
     plt.show()
 
@@ -73,7 +83,7 @@ def plot_area_estimates(sampler_function, mandelbrot, n_means=50, max_iter=256):
     plt.show()
 
 
-def plot_sampling_illustration(mandelbrot, sampler, latin_hypercube=False, orthogonal=False):
+def illustrate_sampler(mandelbrot, sampler, latin_hypercube=False, orthogonal=False):
     '''Plots an illustration of input sampler.
     
     :param mandelbrot: Mandelbrot set
@@ -130,36 +140,43 @@ def plot_sampling_illustration(mandelbrot, sampler, latin_hypercube=False, ortho
     plt.show()
 
 
-def plot_area_j_s(abbr='pr', sample_sizes=[100, 1_000, 10_000, 100_000, 1_000_000]):
+def plot_convergence_A_to_js_A_is(A_is, abbr='pr', sample_sizes=[100, 1_000, 10_000, 100_000, 1_000_000]):
     
     # 1. Initialize the plot layout & line styling
-    fig, axs = plt.subplots(1, 2, figsize=(12, 6))
+    fig, axs = plt.subplots(1, 2, figsize=(15, 6))
+    axs[0].set_ylabel('$|A_{j,s} - A_{i,s}|$', fontweight='bold', fontsize=14)
+    fig.supxlabel('$j$', fontweight='bold', fontsize=14)
+    
     alphas = [0.4, 0.6, 0.8, 1, 0.8]
     plasma = plt.cm.get_cmap('plasma', len(sample_sizes))
     legend_names = [r'= 100', r'= 1,000', r'= 10,000', r'= 100,000', r'= 1,000,000']
 
     # 2. Plot the estimates
     for i in np.arange(len(sample_sizes)):
-        areas_s = pd.read_csv(f'data/{abbr}_A_s_{sample_sizes[i]}.csv')
         
+        areas_s = pd.read_csv(f'data/{abbr}_A_s_{sample_sizes[i]}.csv')
+        convergence = np.abs(areas_s['area'] - A_is) 
+
         # 2.1. Left plot:
         axs[0].plot(
             areas_s['n_iters'], 
-            areas_s['area'],
+            convergence,
             label=legend_names[i],
             alpha=alphas[i],
             color=plasma(i)
         )
-
+        
         # 2.2. Right plot: Zoomed
-        areas_s_zoomed = areas_s[(areas_s['n_iters'] >= 100) & (areas_s['n_iters'] <= 200)]
         axs[1].plot(
-            areas_s_zoomed['n_iters'], 
-            areas_s_zoomed['area'],
+            areas_s['n_iters'], 
+            convergence,
             alpha=alphas[i],
             color=plasma(i)
         )
-        axs[1].set_ylim([0.8, 2.4])
+        axs[1].set_ylim([-0.1, .6])
+        axs[1].set_xlim([150, 250])
+        axs[1].set_yticks([0, 0.25, 0.5])
+        axs[1].set_xticks([150, 200, 250])
 
     # 3. Show plot:
     fig.legend(
@@ -167,10 +184,9 @@ def plot_area_j_s(abbr='pr', sample_sizes=[100, 1_000, 10_000, 100_000, 1_000_00
         framealpha=1,
         ncol=5, 
         fontsize=12,
-        title=f'Sample Size, s',
-        title_fontsize=16,
+        title=f'$s$',
+        title_fontsize=14,
         columnspacing=1.5,
         handletextpad=0.5
     )
-    fig.tight_layout()
     plt.show()
