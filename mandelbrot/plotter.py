@@ -7,19 +7,24 @@ from .utils import in_mandelbrot_vectorized_count, estimate_mean_area
 from .Mandelbrot import Mandelbrot
 
 
-def illustrate_mandelbrot_set(Mandelbrot: Mandelbrot, max_iter):
-    '''Plots the Mandelbrot set.'''
+def illustrate_mandelbrot_set(Mandelbrot, max_iter):
+    '''Plots the Mandelbrot set.
+    
+    :param Mandelbrot: Mandelbrot set
+    :param max_iter: maximum number of iterations to perform
+    '''
     count = in_mandelbrot_vectorized_count(Mandelbrot, max_iter)
     
     fig, ax = plt.subplots()
     sc = ax.scatter(Mandelbrot.x_grid, Mandelbrot.y_grid, c=count.ravel(), cmap='viridis')
     
+    plt.colorbar(sc, label='Number of iterations to diverge')
+    
     ax.spines['top'].set_visible(False)
     ax.spines['right'].set_visible(False)
 
-    plt.colorbar(sc, label='#iterations')  # I use a variable to avoid async issues
-    plt.xlabel(f'$\Re z$')
-    plt.ylabel(f'$\Im z$')
+    plt.xlabel('$\operatorname{Re}(z)$')
+    plt.ylabel('$\operatorname{Im}(z)$')
     plt.show()
     
 
@@ -32,8 +37,8 @@ def plot_mandbrot_sample(points: ndarray, point_in_mandelbrot, plot_color):
     '''
     plt.figure(figsize=(5, 5), dpi=900)
     
-    plt.xlabel(f'$\Re z$')
-    plt.ylabel(f'$\Im z$')
+    plt.xlabel('$\operatorname{Re}(z)$')
+    plt.ylabel('$\operatorname{Im}(z)$')
 
     plt.ylim([-1.2, 1.2])
     plt.xlim([-1.7, 0.7])
@@ -83,7 +88,7 @@ def plot_area_estimates(sampler_function, mandelbrot, n_means=50, max_iter=256):
     plt.show()
 
 
-def illustrate_sampler(mandelbrot, sampler, latin_hypercube=False, orthogonal=False):
+def illustrate_sampler(mandelbrot, sampler, latin_hypercube=False, orthogonal=False, export=False):
     '''Plots an illustration of input sampler.
     
     :param mandelbrot: Mandelbrot set
@@ -139,6 +144,10 @@ def illustrate_sampler(mandelbrot, sampler, latin_hypercube=False, orthogonal=Fa
     plt.tight_layout()
     plt.show()
 
+    # 5. Export the plot:
+    if export:
+        fig.savefig(f'plots/{sampler.__name__}_sampling.png', dpi=900)
+
 
 def plot_convergence_A_to_js_A_is(A_is, abbr='pr', sample_sizes=[100, 1_000, 10_000, 100_000, 1_000_000]):
     
@@ -180,13 +189,36 @@ def plot_convergence_A_to_js_A_is(A_is, abbr='pr', sample_sizes=[100, 1_000, 10_
 
     # 3. Show plot:
     fig.legend(
-        loc='upper center', 
+        loc='center right', 
         framealpha=1,
-        ncol=5, 
         fontsize=12,
         title=f'$s$',
         title_fontsize=14,
-        columnspacing=1.5,
         handletextpad=0.5
     )
+    plt.show()
+
+
+def plot_area_of_interest(x_interval, y_interval, area_of_interest, sample, is_in_mandelbrot):
+    
+    xx, yy = np.meshgrid(x_interval[:-1], y_interval[:-1])
+
+    fig, axs = plt.subplots(1, 2, figsize=(14, 7), dpi=900)
+
+    # 1. Left plot: Initial sample
+    axs[0].scatter(sample.real, sample.imag, c=is_in_mandelbrot, cmap='viridis')
+    axs[0].set_title("$s = 100,000$", fontsize=20)
+    axs[0].set_xticks([])
+    axs[0].set_yticks([])
+    axs[0].set_xlabel('$\operatorname{Re}(z)$', fontsize=18)
+    axs[0].set_ylabel('$\operatorname{Im}(z)$', fontsize=18)
+    
+    # 2. Right plot: Area of interest
+    axs[1].set_title(f"$total = {np.sum(area_of_interest)}$", fontsize=20)
+    axs[1].scatter(xx, yy, c=area_of_interest, cmap='viridis')
+    axs[1].set_xticks([])
+    axs[1].set_yticks([])
+    axs[1].set_xlabel('$\operatorname{Re}(z)$', fontsize=18)
+
+    plt.tight_layout()
     plt.show()
