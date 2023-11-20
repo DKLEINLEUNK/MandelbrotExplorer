@@ -154,8 +154,6 @@ def estimate_A_j_s(mandelbrot, sampler, abbr='tmp', J=np.arange(1, 257, 2), S=np
         }).to_csv(f'data/{abbr}_A_s_{s}.csv', index=False)
 
 
-
-
 #---------------------------
 # GENERIC LIBRARY UTILITIES
 #---------------------------

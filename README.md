@@ -8,29 +8,7 @@ Solely intended for educational purposes.
 
 # Assignment 1
 
-See notebook `Notebook.ipynb` for our submission of assignment 1. This notebook uses the modules in `mandelbrot/`.
-
-## TODO
-
-### Large tasks
-- [ ] Add mean area, A(j,s) plot for different j and s, add argument for convergence with confidence intervals for each A(j,s).
-- [x] Implement the new sample plotters (with strata included) into plotter
-- [x] Compare how different quasi-random number algortithms perform.
-- [x] Define a statistics generator for estimating integration accuracy.
-- [x] Test wether each sampling method adhered to all assumptions.
-- [x] Implement orthogonal sampling.
-- [x] Update all sampling algorithms with the optimized algorithm in `orthogonal.py`.
-
-### Small tasks (additions and removals)
-- [x] Adjust `orthogonal.py` sampler to give true input sample size `n_sample`.
-- [x] Remove `monte_carlo.py` module (and its traces in other modules).
-- [x] Add a method to utils module that calculates the area of the set.
-- [x] Add a calculation of the area: multiply points in set by total sample space.
-- [x] In `orthogonal.py` replace `interval_length` with `n_samples` and infer interval length from that.
-
-
-## Project Outline
-The `mandelbrot` package adheres to the following structure:
+See notebook `Notebook.ipynb` for my submission of assignment 1. This notebook uses the modules in `mandelbrot` package, which adheres to the following structure:
 
 ```
 mandelbrot/
