@@ -101,7 +101,7 @@ def illustrate_sampler(mandelbrot, sampler, latin_hypercube=False, orthogonal=Fa
     elif orthogonal:
         sampler.__name__ = 'Orthogonal'
     else:
-        sampler.__name__ = 'Pure Random'
+        sampler.__name__ = 'Simple Random'
 
     # 1. Initialize the plot layout
     fig, axs = plt.subplots(1, 2, figsize=(12, 6))
@@ -112,7 +112,7 @@ def illustrate_sampler(mandelbrot, sampler, latin_hypercube=False, orthogonal=Fa
         n_samples = 100
         x_strata, y_strata, sample, in_mandelbrot = sampler(mandelbrot, n_samples, 256, return_lowerbounds=True)
     else:
-        n_samples = 25
+        n_samples = 10
         sample, in_mandelbrot = sampler(mandelbrot, n_samples, 256)
         x_strata = np.linspace(mandelbrot.x_min, mandelbrot.x_max, num=n_samples + 1)
         y_strata = np.linspace(mandelbrot.y_min, mandelbrot.y_max, num=n_samples + 1)
@@ -123,30 +123,36 @@ def illustrate_sampler(mandelbrot, sampler, latin_hypercube=False, orthogonal=Fa
     for y in y_strata:
         axs[0].axhline(y, color='grey', linestyle='--', lw=0.5)
 
+
     # 2.3. Scatter the first sample:
     axs[0].scatter(sample.real, sample.imag, c=in_mandelbrot, cmap='viridis')
-    axs[0].set_title(f"$s = {len(sample)}$")
-    axs[0].set_xlabel("Real")
-    axs[0].set_ylabel("Imaginary")
+    axs[0].set_title(f"$s = {len(sample)}$", fontsize=20)
+    # axs[0].set_xlabel('$\operatorname{Re}(z)$', fontsize=18)
+    # axs[0].set_ylabel('$\operatorname{Im}(z)$', fontsize=14)
+    axs[0].set_xticks([])
+    axs[0].set_yticks([])
 
     # 3. Right plot: Large sample size, without strata
     sample2, in_mandelbrot2 = sampler(mandelbrot, 1_000, 256)
     axs[1].scatter(sample2.real, sample2.imag, c=in_mandelbrot2, cmap='viridis')
-    axs[1].set_title("$s = 1,000$")
-    axs[1].set_xlabel("Real")
+    axs[1].set_title("$s = 1,000$", fontsize=20)
+    # axs[1].set_xlabel('$\operatorname{Re}(z)$', fontsize=16)
+    axs[1].set_xticks([])
     axs[1].set_yticks([])
-    
+
+    fig.supxlabel('$\operatorname{Re}(z)$', fontsize=16)
+    fig.supylabel('$\operatorname{Im}(z)$', fontsize=16)
     # 4. Show the plot:
     for ax in axs:
         ax.set_xlim([mandelbrot.x_min, mandelbrot.x_max])
         ax.set_ylim([mandelbrot.y_min, mandelbrot.y_max])
-    fig.suptitle(f"{sampler.__name__} Sampling", fontweight='bold', fontsize=16)
+    # fig.suptitle(f"{sampler.__name__} Sampling", fontweight='bold', fontsize=16)
     plt.tight_layout()
     plt.show()
 
     # 5. Export the plot:
     if export:
-        fig.savefig(f'plots/{sampler.__name__}_sampling.png', dpi=900)
+        fig.savefig(f'plots/2_{sampler.__name__}_sampling.png', dpi=900)
 
 
 def plot_convergence_A_to_js_A_is(A_is, abbr='pr', sample_sizes=[100, 1_000, 10_000, 100_000, 1_000_000]):
@@ -196,6 +202,7 @@ def plot_convergence_A_to_js_A_is(A_is, abbr='pr', sample_sizes=[100, 1_000, 10_
         title_fontsize=14,
         handletextpad=0.5
     )
+    plt.tight_layout()
     plt.show()
 
 
@@ -215,7 +222,7 @@ def plot_area_of_interest(x_interval, y_interval, area_of_interest, sample, is_i
     
     # 2. Right plot: Area of interest
     axs[1].set_title(f"$total = {np.sum(area_of_interest)}$", fontsize=20)
-    axs[1].scatter(xx, yy, c=area_of_interest, cmap='viridis')
+    axs[1].scatter(xx, yy, c=area_of_interest.T, cmap='viridis')
     axs[1].set_xticks([])
     axs[1].set_yticks([])
     axs[1].set_xlabel('$\operatorname{Re}(z)$', fontsize=18)
