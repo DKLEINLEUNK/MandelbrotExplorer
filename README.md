@@ -1,4 +1,4 @@
-# Stochastic Simulation
+# Mandelbrot Explorer
 
 Assignments for the course Stochastic Simulation, University of Amsterdam (23-24).
 
